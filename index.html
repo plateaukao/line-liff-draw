@@ -1,72 +1,71 @@
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIFF Starter</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+{% extends "bootstrap/base.html" %}
 
-<body>
-    <div class="buttongroup">
-        <div class="buttonrow">
-            <button id="openwindowbutton">Open Window</button>
-            <button id="closewindowbutton">Close Window</button>
-        </div>
-        <div class="buttonrow">
-            <button id="getprofilebutton">Get Profile</button>
-            <button id="sendmessagebutton">Send Message</button>
-        </div>
-    </div>
+{%- block metas %}
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+{%- endblock metas %}
+{% block scripts %}
+{{super()}}
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
+  <script>
+    const canvas = document.querySelector('#canvas');
+    const signaturePad = new SignaturePad(canvas, {
+      backgroundColor: 'rgb(238,238,238)',
+    });
 
-    <div id="profileinfo">
-        <h2>Profile</h2>
-        <a href="#" onclick="toggleProfileData()">Close Profile</a>
-        <div id="profilepicturediv">
-        </div>
-        <table border="1">
-            <tr>
-                <th>userId</th>
-                <td id="useridprofilefield"></td>
-            </tr>
-            <tr>
-                <th>displayName</th>
-                <td id="displaynamefield"></td>
-            </tr>
-            <tr>
-                <th>statusMessage</th>
-                <td id="statusmessagefield"></td>
-            </tr>
-        </table>
-    </div>
+    $(window).on('load', function(){
+      canvas.setAttribute('width', $('.container').width());
+      canvas.setAttribute('height', window.innerHeight - $('#btn').outerHeight() - 10);
+      signaturePad.clear();
+      liff.init(function (data) {});
+    });
+  </script>
+  <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    $('#btn').on('click', function() {
+      $.ajax({
+        type: 'POST',
+        url: '/saveimage',
+        data: {
+          'image': signaturePad.toDataURL('image/jpeg')
+        },
+        success: function (res, status) {
+          liff.getProfile().then(function (profile) {
+            liff.sendMessages([
+              {
+                type: 'image',
+                originalContentUrl: 'https://' + document.domain + '/imgs/' + res + '.jpg',
+                previewImageUrl: 'https://' + document.domain + '/imgs/' + res + '_240.jpg'
+              },
+              {
+                type: 'text',
+                text: 'From:' + profile.displayName
+              }
+            ]).then(function () {
+              liff.closeWindow();
+            }).catch(function (error) {
+              window.alert('Error sending message: ' + error.message);
+            });
+          }).catch(function (error) {
+              window.alert("Error getting profile: " + error.message);
+          });
+        },
+        error: function (res) {
+          window.alert('Error saving image: ' + res.status);
+        },
+        complete: function(data) {
+        }
+      });
+    });
+  </script>
+{% endblock %}
 
-    <div id="liffdata">
-        <h2>LIFF Data</h2>
-        <table border="1">
-            <tr>
-                <th>language</th>
-                <td id="languagefield"></td>
-            </tr>
-            <tr>
-                <th>context.viewType</th>
-                <td id="viewtypefield"></td>
-            </tr>
-            <tr>
-                <th>context.userId</th>
-                <td id="useridfield"></td>
-            </tr>
-            <tr>
-                <th>context.utouId</th>
-                <td id="utouidfield"></td>
-            </tr>
-            <tr>
-                <th>context.roomId</th>
-                <td id="roomidfield"></td>
-            </tr>
-            <tr>
-                <th>context.groupId</th>
-                <td id="groupidfield"></td>
-            </tr>
-        </table>
-    </div>
-    
-    <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
-    <script src="liff-starter.js"></script>
-</body>
+{% block title %}Paint Sample{% endblock %}
+
+{% block content %}
+<div class="container">
+  <canvas id="canvas"></canvas>
+  <button id="btn" type="button" class="btn btn-primary btn-block">Share</button>
+</div>
+{% endblock %}
+
