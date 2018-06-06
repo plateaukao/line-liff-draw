@@ -31,6 +31,9 @@
     $('#color_blue').on('click', function() {
       signaturePad.penColor= "rgb(0, 0, 255)";
     });
+    $('#clear').on('click', function() {
+      signaturePad.clear();
+    });
     $('#btn').on('click', function() {
       $.ajax({
         type: 'POST',
@@ -72,15 +75,18 @@
   <canvas id="canvas"></canvas>
 <div class="row">
 <div class="col-xs-2" >
-  <button id="color_black" style="background-color:black;" type="button" class="btn btn-primary btn-block">Black</button>
+  <button id="color_black" style="background-color:black;" type="button" class="btn btn-block">Black</button>
 </div>
 <div class="col-xs-2" >
-  <button id="color_red" style="background-color:red;" type="button" class="btn btn-primary btn-block">Red</button>
+  <button id="color_red" style="background-color:red;" type="button" class="btn btn-block">Red</button>
 </div>
 <div class="col-xs-2" >
-  <button id="color_blue" style="background-color:blue;" type="button" class="btn btn-primary btn-block">Blue</button>
+  <button id="color_blue" style="background-color:blue;" type="button" class="btn btn-block">Blue</button>
 </div>
-<div class="col-xs-6">
+<div class="col-xs-2" >
+  <button id="clear" type="button" class="btn btn-block">Clear</button>
+</div>
+<div class="col-xs-4">
   <button id="btn" type="button" class="btn btn-primary btn-block">Share</button>
 </div>
 </div>
