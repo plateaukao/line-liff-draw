@@ -40,7 +40,7 @@ $.ajax({
         type: 'POST',
         url: '/saveimage',
         data: {
-          'image': signaturePad.toDataURL('image/jpeg')
+          'image': signaturePad.toDataURL('image/png')
         },
         success: function (res, status) {
           liff.getProfile().then(function (profile) {
