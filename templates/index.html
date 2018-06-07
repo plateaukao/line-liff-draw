@@ -36,14 +36,15 @@
       signaturePad.clear();
     });
     $('#btn').on('click', function() {
+          liff.getProfile().then(function (profile) {
 $.ajax({
         type: 'POST',
         url: '/saveimage',
         data: {
+          'user_name': profile.displayName
           'image': signaturePad.toDataURL('image/png')
         },
         success: function (res, status) {
-          liff.getProfile().then(function (profile) {
             liff.sendMessages([
               {
                 type: 'image',
@@ -55,15 +56,16 @@ $.ajax({
             }).catch(function (error) {
               window.alert('Error sending message: ' + error.message);
             });
-          }).catch(function (error) {
-              window.alert("Error getting profile: " + error.message);
-          });
         },
         error: function (res) {
           window.alert('Error saving image: ' + res.status);
         },
         complete: function(data) {
         }
+      });
+
+      }).catch(function (error) {
+      window.alert("Error getting profile: " + error.message);
       });
     });
   </script>

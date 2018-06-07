@@ -33,7 +33,7 @@ def saveimage():
 
     original_filepath = os.path.join(dir_name, '{}.png'.format(img_name))
 
-    url, imageId = image_management.upload("temp", original_filepath)
+    url, imageId = image_management.upload(event['user_name'], original_filepath)
     thumbnail = image_management.getPreviewImage(imageId)
 
     return make_response(jsonify({'url':url,'thumbnail':thumbnail}), 200)
