@@ -9,7 +9,7 @@
   <script>
     const canvas = document.querySelector('#canvas');
     const signaturePad = new SignaturePad(canvas, {
-      backgroundColor: 'rgb(238,238,238)',
+      //backgroundColor: 'rgb(238,238,238)',
     });
 
     $(window).on('load', function(){
@@ -39,15 +39,15 @@
         type: 'POST',
         url: '/saveimage',
         data: {
-          'image': signaturePad.toDataURL('image/jpeg')
+          'image': signaturePad.toDataURL('image/png')
         },
         success: function (res, status) {
           liff.getProfile().then(function (profile) {
             liff.sendMessages([
               {
                 type: 'image',
-                originalContentUrl: 'https://' + document.domain + '/imgs/' + res + '.jpg',
-                previewImageUrl: 'https://' + document.domain + '/imgs/' + res + '_240.jpg'
+                originalContentUrl: 'https://' + document.domain + '/imgs/' + res + '.png',
+                previewImageUrl: 'https://' + document.domain + '/imgs/' + res + '_240.png'
               },
             ]).then(function () {
               liff.closeWindow();
@@ -68,7 +68,7 @@
   </script>
 {% endblock %}
 
-{% block title %}Paint Sample{% endblock %}
+{% block title %}Draw!!{% endblock %}
 
 {% block content %}
 <div class="container">

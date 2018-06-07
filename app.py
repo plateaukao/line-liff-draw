@@ -27,16 +27,16 @@ def saveimage():
     # Saving image in the 'imgs' folder temporarily. Should be deleted after a certain period of time
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
-    with open(os.path.join(dir_name, '{}.jpg'.format(img_name)), 'wb') as img:
+    with open(os.path.join(dir_name, '{}.png'.format(img_name)), 'wb') as img:
         img.write(base64.b64decode(event['image'].split(",")[1]))
 
-    original = Image.open(os.path.join(dir_name, '{}.jpg'.format(img_name)))
+    original = Image.open(os.path.join(dir_name, '{}.png'.format(img_name)))
     # Needs simple validation of format for security since Pillow supports various type of Images
-    if(original.format != 'JPEG'):
+    if(original.format != 'PNG'):
         return make_response('Unsupported image type.', 400)
 
     original.thumbnail((240, 240), Image.ANTIALIAS)
-    original.save(os.path.join(dir_name, '{}_240.jpg'.format(img_name)), 'JPEG')
+    original.save(os.path.join(dir_name, '{}_240.png'.format(img_name)), 'PNG')
 
     return make_response(img_name, 200)
 
