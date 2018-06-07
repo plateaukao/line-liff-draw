@@ -31,13 +31,13 @@ def saveimage():
         img.write(base64.b64decode(event['image'].split(",")[1]))
 
     original = Image.open(os.path.join(dir_name, '{}.png'.format(img_name)))
-    dialog = Image.open('dialog.png')
     # Needs simple validation of format for security since Pillow supports various type of Images
     if(original.format != 'PNG'):
         return make_response('Unsupported image type.', 400)
 
     original.thumbnail((240, 240), Image.ANTIALIAS)
-    original.paste(dialog, (0, 0), dialog)
+    #dialog = Image.open('dialog.png')
+    #original.paste(dialog, (0, 0), dialog)
     original.save(os.path.join(dir_name, '{}_240.png'.format(img_name)), 'PNG')
 
     return make_response(img_name, 200)
