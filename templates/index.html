@@ -25,11 +25,37 @@
   <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script>
+function sendImageToUser(url, thumbnail) {
+            liff.sendMessages([
+              {
+                type: 'image',
+                originalContentUrl: url,
+                previewImageUrl: thumbnail,
+              },
+            ]).then(function () {
+              liff.closeWindow();
+            }).catch(function (error) {
+              window.alert('Error sending message: ' + error.message);
+            });
+}
     $('#list').on('click', function() {
-	liff.openWindow({
-	  url:'/list',
-	  external:false
-	});
+      $('#canvas').hide();
+        $.ajax({
+                type: 'GET',
+                url: '/api/image/list',
+                data: { 'userId': userId, },
+                success: function (res, status) {
+                   res.forEach(function(image) {
+                       var element = document.createElement("IMG");
+                       element.src=image.thumbnail;
+                       element.alt=image.url
+                       $(element).on('click',function() {
+                            sendImageToUser($(this).attr('alt'), $(this).attr('src'));
+                       });
+                       $('.container').append(element);
+                   });
+                }
+               });
     });
     $('#color_black').on('click', function() {
       signaturePad.penColor= "rgb(0, 0, 0)";
@@ -52,17 +78,7 @@ $.ajax({
           'image': signaturePad.toDataURL('image/png')
         },
         success: function (res, status) {
-            liff.sendMessages([
-              {
-                type: 'image',
-                originalContentUrl: res.url,
-                previewImageUrl: res.thumbnail,
-              },
-            ]).then(function () {
-              liff.closeWindow();
-            }).catch(function (error) {
-              window.alert('Error sending message: ' + error.message);
-            });
+            sendImageToUser(res.url, res.thumbnail);
         },
         error: function (res) {
           window.alert('Error saving image: ' + res.status);
