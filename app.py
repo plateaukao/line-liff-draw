@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, make_response
+from flask import Flask, request, render_template, make_response,jsonify
 from flask_bootstrap import Bootstrap
 
 import os
@@ -34,9 +34,9 @@ def saveimage():
     original_filepath = os.path.join(dir_name, '{}.png'.format(img_name))
 
     url, imageId = image_management.upload("temp", original_filepath)
-    print url, imageId
+    thumbnail = image_management.getPreviewImage(imageId)
 
-    return make_response((url, imageId), 200)
+    return make_response(jsonify({'url':url,'thumbnail':thumbnail}), 200)
 
 
 if __name__ == '__main__':
