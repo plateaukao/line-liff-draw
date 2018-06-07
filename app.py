@@ -4,6 +4,7 @@ from flask_bootstrap import Bootstrap
 import os
 import uuid
 import base64
+import image_management
 
 from PIL import Image
 import warnings
@@ -30,17 +31,12 @@ def saveimage():
     with open(os.path.join(dir_name, '{}.png'.format(img_name)), 'wb') as img:
         img.write(base64.b64decode(event['image'].split(",")[1]))
 
-    original = Image.open(os.path.join(dir_name, '{}.png'.format(img_name)))
-    # Needs simple validation of format for security since Pillow supports various type of Images
-    if(original.format != 'PNG'):
-        return make_response('Unsupported image type.', 400)
+    original_filepath = os.path.join(dir_name, '{}.png'.format(img_name))
 
-    original.thumbnail((240, 240), Image.ANTIALIAS)
-    #dialog = Image.open('dialog.png')
-    #original.paste(dialog, (0, 0), dialog)
-    original.save(os.path.join(dir_name, '{}_240.png'.format(img_name)), 'PNG')
+    url, imageId = image_management.upload("temp", original_filepath)
+    print url, imageId
 
-    return make_response(img_name, 200)
+    return make_response((url, imageId), 200)
 
 
 if __name__ == '__main__':
