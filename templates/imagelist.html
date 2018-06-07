@@ -5,12 +5,16 @@
 {%- endblock metas %}
 {% block scripts %}
 {{super()}}
+  <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script>
-
-    userId = "unknown";
+    var userId = "unknown";
     $(window).on('load', function(){
-      liff.init(function (data) {
-          userId = data.context.userId;
+      liff.init(function (data) { });
+
+	liff.getProfile()
+	.then(function(profile) {
+	  userId = profile.userId
 	$.ajax({
 		type: 'GET',
 		url: '/api/image/list',
@@ -23,11 +27,9 @@
                    });
                 }
                });
-      });
+	})
     });
   </script>
-  <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script>
     $('#draw').on('click', function() {
               location.href='/';
