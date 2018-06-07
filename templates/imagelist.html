@@ -11,8 +11,6 @@
     $(window).on('load', function(){
       liff.init(function (data) {
           userId = data.context.userId;
-      });
-    });
 	$.ajax({
 		type: 'GET',
 		url: '/api/image/list',
@@ -25,6 +23,8 @@
                    });
                 }
                });
+      });
+    });
   </script>
   <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
