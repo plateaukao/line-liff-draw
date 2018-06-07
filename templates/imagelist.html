@@ -32,7 +32,10 @@
   </script>
   <script>
     $('#draw').on('click', function() {
-              location.href='/';
+	liff.openWindow({
+	  url:'/',
+	  external:false
+	});
     });
     $('#btn').on('click', function() {
               liff.closeWindow();

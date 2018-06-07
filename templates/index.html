@@ -26,7 +26,10 @@
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script>
     $('#list').on('click', function() {
-        location.href='/list';
+	liff.openWindow({
+	  url:'/list',
+	  external:false
+	});
     });
     $('#color_black').on('click', function() {
       signaturePad.penColor= "rgb(0, 0, 0)";
