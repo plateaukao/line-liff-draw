@@ -7,16 +7,24 @@
 {{super()}}
   <script>
 
+    userId = "unknown";
     $(window).on('load', function(){
       liff.init(function (data) {
+          userId = data.context.userId;
+      });
+    });
 	$.ajax({
 		type: 'GET',
 		url: '/api/image/list',
-		data: { 'user_id': data.context.userId, },
-		success: function (res, status) { }
+		data: { 'userId': userId, },
+		success: function (res, status) { 
+                   res.forEach(function(image) {
+                       var element = document.createElement("IMG");
+                       element.src=image.thumbnail;
+                       $('.container').append(element);
+                   });
+                }
                });
-      });
-    });
   </script>
   <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
