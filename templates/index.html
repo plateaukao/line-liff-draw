@@ -41,7 +41,7 @@ $.ajax({
         type: 'POST',
         url: '/saveimage',
         data: {
-          'user_name': profile.displayName
+          'user_name': profile.displayName,
           'image': signaturePad.toDataURL('image/png')
         },
         success: function (res, status) {
