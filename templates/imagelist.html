@@ -1,0 +1,46 @@
+{% extends "bootstrap/base.html" %}
+
+{%- block metas %}
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+{%- endblock metas %}
+{% block scripts %}
+{{super()}}
+  <script>
+
+    $(window).on('load', function(){
+      liff.init(function (data) {
+	$.ajax({
+		type: 'GET',
+		url: '/api/image/list',
+		data: { 'user_id': data.context.userId, },
+		success: function (res, status) { }
+               });
+      });
+    });
+  </script>
+  <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    $('#draw').on('click', function() {
+              location.href='/';
+    });
+    $('#btn').on('click', function() {
+              liff.closeWindow();
+    });
+  </script>
+{% endblock %}
+
+{% block title %}Image List{% endblock %}
+
+{% block content %}
+<div class="container">
+<div class="row">
+<div class="col-xs-6" >
+  <button id="draw" type="button" class="btn btn-primary btn-block">draw</button>
+</div>
+<div class="col-xs-6" >
+  <button id="btn" type="button" class="btn btn-primary btn-block">Close</button>
+</div>
+</div>
+{% endblock %}
+

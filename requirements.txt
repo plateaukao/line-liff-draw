@@ -3,3 +3,4 @@ gunicorn
 flask-bootstrap
 cloudinary
 Pillow
+pymongo

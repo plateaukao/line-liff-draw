@@ -12,17 +12,22 @@
       //backgroundColor: 'rgb(238,238,238)',
     });
 
+    userId = 'unknown';
     $(window).on('load', function(){
       canvas.setAttribute('width', $('.container').width());
       canvas.setAttribute('height', window.innerHeight - $('#btn').outerHeight() - 10);
       signaturePad.clear();
       liff.init(function (data) {
+          userId = data.context.userId;
       });
     });
   </script>
   <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script>
+    $('#list').on('click', function() {
+        location.href='/list';
+    });
     $('#color_black').on('click', function() {
       signaturePad.penColor= "rgb(0, 0, 0)";
     });
@@ -36,12 +41,11 @@
       signaturePad.clear();
     });
     $('#btn').on('click', function() {
-          liff.getProfile().then(function (profile) {
 $.ajax({
         type: 'POST',
-        url: '/saveimage',
+        url: '/api/image',
         data: {
-          'user_name': profile.displayName,
+          'user_id': userId,
           'image': signaturePad.toDataURL('image/png')
         },
         success: function (res, status) {
@@ -63,10 +67,6 @@ $.ajax({
         complete: function(data) {
         }
       });
-
-      }).catch(function (error) {
-      window.alert("Error getting profile: " + error.message);
-      });
     });
   </script>
 {% endblock %}
@@ -77,6 +77,9 @@ $.ajax({
 <div class="container">
   <canvas id="canvas"></canvas>
 <div class="row">
+<div class="col-xs-2" >
+  <button id="list" type="button" class="btn btn-block">List</button>
+</div>
 <div class="col-xs-2" >
   <button id="color_black" style="background-color:black;" type="button" class="btn btn-block">Black</button>
 </div>
@@ -89,7 +92,7 @@ $.ajax({
 <div class="col-xs-2" >
   <button id="clear" type="button" class="btn btn-block">Clear</button>
 </div>
-<div class="col-xs-4">
+<div class="col-xs-2">
   <button id="btn" type="button" class="btn btn-primary btn-block">Share</button>
 </div>
 </div>

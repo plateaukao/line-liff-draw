@@ -1,7 +1,7 @@
-from cloudinary import uploader, CloudinaryImage
+from cloudinary import uploader, CloudinaryImage,Search
   
-def upload(user_name, file_name):
-    response = uploader.upload(file_name, tags=user_name)
+def upload(file_name, user_id):
+    response = uploader.upload(file_name, tags=user_id)
     return response['secure_url'], response['public_id']
 
 def getPreviewImage(imageId):
