@@ -37,7 +37,6 @@ def saveimage():
         return make_response('Unsupported image type.', 400)
 
     original.thumbnail((240, 240), Image.ANTIALIAS)
-    dialog.thumbnail((240, 240), Image.ANTIALIAS)
     original.paste(dialog, (0, 0), dialog)
     original.save(os.path.join(dir_name, '{}_240.png'.format(img_name)), 'PNG')
 
