@@ -45,12 +45,13 @@
             url: '/api/image/list',
             data: { 'userId': userId, },
             success: function (res, status) {
-                res.forEach(function(image) {
+                res.forEach(function(image, index) {
                     var element = document.createElement("IMG");
                     element.src=image.thumbnail;
-                    element.alt=image.url
+                    element.alt=image.url;
+                    element.width = (window.innerWidth/2) - 20;
                     element.style.border="1px solid black";
-                    element.style.margin="5px";
+                    element.style.margin="2px";
                     $(element).on('click',function() {
                         sendImageToUser($(this).attr('alt'), $(this).attr('src'));
                     });
