@@ -74,7 +74,7 @@
                     $(element).on('click',function() {
                         timer = setTimeout(function() {
                          if (!prevent) {
-                             sendImageToUser($(this).attr('alt'), $(this).attr('src'));
+                             sendImageToUser(image.url, image.thumbnail);
                          }
                          prevent = false;
                         }, delay);
