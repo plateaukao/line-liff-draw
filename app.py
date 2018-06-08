@@ -63,7 +63,6 @@ def saveimage():
 @app.route('/api/image', methods=['DELETE'])
 def deleteImage():
     data = request.form.to_dict()
-    print data
     userId = data['userId']
     imageId = data['imageId']
 
