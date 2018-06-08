@@ -67,11 +67,21 @@
                     element.width = (window.innerWidth/2) - 20;
                     element.style.border="1px solid black";
                     element.style.margin="2px";
-                    var tmr = 0;
+
+                    var timer = 0;
+                    var delay = 200;
+                    var prevent = false;
                     $(element).on('click',function() {
-                        sendImageToUser($(this).attr('alt'), $(this).attr('src'));
+                        timer = setTimeout(function() {
+                         if (!prevent) {
+                             sendImageToUser($(this).attr('alt'), $(this).attr('src'));
+                         }
+                         prevent = false;
+                        }, delay);
                     });
                     $(element).on('dblclick',function() {
+                        clearTimeout(timer);
+                        prevent = true;
                         removeImage(image.userId, image.imageId);
                     });
                     $('.container').append(element);
