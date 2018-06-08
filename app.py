@@ -69,7 +69,7 @@ def deleteImage():
 
     db_access.deleteImage(userId, imageId)
 
-    return make_response('ok', 200)
+    return make_response(jsonify({'status':'ok'}), 200)
 
 
 if __name__ == '__main__':
