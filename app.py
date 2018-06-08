@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, make_response,jsonify
+from flask import Flask, request, render_template, make_response,jsonify, Response
 from flask_bootstrap import Bootstrap
 
 import os
@@ -32,6 +32,8 @@ def imagelist():
             image = {}
             image['url'] = r['url']
             image['thumbnail'] = r['thumbnail']
+            image['imageId'] = r['imageId']
+            image['userId'] = r['userId']
             images.append(image)
     return make_response(jsonify(images), 200)
     return images
@@ -42,7 +44,7 @@ def saveimage():
 
     dir_name = 'imgs'
     img_name = uuid.uuid4().hex
-    userId = event['user_id']
+    userId = event['userId']
 
     # Saving image in the 'imgs' folder temporarily. Should be deleted after a certain period of time
     if not os.path.exists(dir_name):
@@ -57,6 +59,17 @@ def saveimage():
     db_access.addImage(userId, imageId, url, thumbnail)
 
     return make_response(jsonify({'url':url,'thumbnail':thumbnail}), 200)
+
+@app.route('/api/image', methods=['DELETE'])
+def deleteImage():
+    data = request.form.to_dict()
+    print data
+    userId = data['userId']
+    imageId = data['imageId']
+
+    db_access.deleteImage(userId, imageId)
+
+    return make_response('ok', 200)
 
 
 if __name__ == '__main__':

@@ -38,6 +38,49 @@
             window.alert('Error sending message: ' + error.message);
         });
     }
+
+    function removeImage(userId, imageId) {
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/image',
+            data: {
+                'userId': userId,
+                'imageId': imageId
+            },
+            dataType: "json",
+            success: function (res, status) {
+                $('#'+imageId).remove();
+            },
+            error: function (res) {
+            },
+            complete: function(data) {
+            }
+        });
+    }
+
+    function createImageElement(image) {
+                    var element = document.createElement("IMG");
+                    element.src=image.thumbnail;
+                    element.alt=image.url;
+                    element.id=image.imageId;
+                    element.dataset.userId=image.userId;
+                    element.width = (window.innerWidth/2) - 20;
+                    element.style.border="1px solid black";
+                    element.style.margin="2px";
+                    var tmr = 0;
+                    $(element).mousedown(function () {
+                      tmr = setTimeout(function () {
+                        removeImage(image.userId, image.imageId);
+                      }, 1000);
+                    }).mouseup(function () {
+                      clearTimeout(tmr);
+                    });
+                    $(element).on('click',function() {
+                        sendImageToUser($(this).attr('alt'), $(this).attr('src'));
+                    });
+                    $('.container').append(element);
+    }
+
     $('#list').on('click', function() {
         $('#canvas').hide();
         $.ajax({
@@ -45,17 +88,8 @@
             url: '/api/image/list',
             data: { 'userId': userId, },
             success: function (res, status) {
-                res.forEach(function(image, index) {
-                    var element = document.createElement("IMG");
-                    element.src=image.thumbnail;
-                    element.alt=image.url;
-                    element.width = (window.innerWidth/2) - 20;
-                    element.style.border="1px solid black";
-                    element.style.margin="2px";
-                    $(element).on('click',function() {
-                        sendImageToUser($(this).attr('alt'), $(this).attr('src'));
-                    });
-                    $('.container').append(element);
+                res.forEach(function(image) {
+                    createImageElement(image);
                 });
             }
         });
@@ -81,7 +115,7 @@
             type: 'POST',
             url: '/api/image',
             data: {
-                'user_id': userId,
+                'userId': userId,
                 'image': signaturePad.toDataURL('image/png')
             },
             success: function (res, status) {
