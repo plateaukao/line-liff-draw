@@ -68,15 +68,11 @@
                     element.style.border="1px solid black";
                     element.style.margin="2px";
                     var tmr = 0;
-                    $(element).mousedown(function () {
-                      tmr = setTimeout(function () {
-                        removeImage(image.userId, image.imageId);
-                      }, 1000);
-                    }).mouseup(function () {
-                      clearTimeout(tmr);
-                    });
                     $(element).on('click',function() {
                         sendImageToUser($(this).attr('alt'), $(this).attr('src'));
+                    });
+                    $(element).on('dblclick',function() {
+                        removeImage(image.userId, image.imageId);
                     });
                     $('.container').append(element);
     }
