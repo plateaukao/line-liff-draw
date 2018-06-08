@@ -1,120 +1,122 @@
 {% extends "bootstrap/base.html" %}
 
 {%- block metas %}
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
 {%- endblock metas %}
 {% block scripts %}
 {{super()}}
-  <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
-  <script>
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
+<script>
     const canvas = document.querySelector('#canvas');
     const signaturePad = new SignaturePad(canvas, {
-      //backgroundColor: 'rgb(238,238,238)',
+        //backgroundColor: 'rgb(238,238,238)',
     });
 
     userId = 'unknown';
     $(window).on('load', function(){
-      canvas.setAttribute('width', $('.container').width());
-      canvas.setAttribute('height', window.innerHeight - $('#btn').outerHeight() - 10);
-      signaturePad.clear();
-      liff.init(function (data) {
-          userId = data.context.userId;
-      });
+        canvas.setAttribute('width', $('.container').width());
+        canvas.setAttribute('height', window.innerHeight - $('#btn').outerHeight() - 10);
+        signaturePad.clear();
+        liff.init(function (data) {
+            userId = data.context.userId;
+        });
     });
-  </script>
-  <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <script>
-function sendImageToUser(url, thumbnail) {
-            liff.sendMessages([
-              {
+</script>
+<script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    function sendImageToUser(url, thumbnail) {
+        liff.sendMessages([
+            {
                 type: 'image',
                 originalContentUrl: url,
                 previewImageUrl: thumbnail,
-              },
-            ]).then(function () {
-              liff.closeWindow();
-            }).catch(function (error) {
-              window.alert('Error sending message: ' + error.message);
-            });
-}
+            },
+        ]).then(function () {
+            liff.closeWindow();
+        }).catch(function (error) {
+            window.alert('Error sending message: ' + error.message);
+        });
+    }
     $('#list').on('click', function() {
-      $('#canvas').hide();
+        $('#canvas').hide();
         $.ajax({
-                type: 'GET',
-                url: '/api/image/list',
-                data: { 'userId': userId, },
-                success: function (res, status) {
-                   res.forEach(function(image) {
-                       var element = document.createElement("IMG");
-                       element.src=image.thumbnail;
-                       element.alt=image.url
-                       $(element).on('click',function() {
-                            sendImageToUser($(this).attr('alt'), $(this).attr('src'));
-                       });
-                       $('.container').append(element);
-                   });
-                }
-               });
+            type: 'GET',
+            url: '/api/image/list',
+            data: { 'userId': userId, },
+            success: function (res, status) {
+                res.forEach(function(image) {
+                    var element = document.createElement("IMG");
+                    element.src=image.thumbnail;
+                    element.alt=image.url
+                    element.style.border="1px solid black";
+                    element.style.margin="5px";
+                    $(element).on('click',function() {
+                        sendImageToUser($(this).attr('alt'), $(this).attr('src'));
+                    });
+                    $('.container').append(element);
+                });
+            }
+        });
     });
     $('#color_black').on('click', function() {
-      signaturePad.penColor= "rgb(0, 0, 0)";
+        signaturePad.penColor= "rgb(0, 0, 0)";
     });
     $('#color_red').on('click', function() {
-      signaturePad.penColor= "rgb(255, 0, 0)";
+        signaturePad.penColor= "rgb(255, 0, 0)";
     });
     $('#color_blue').on('click', function() {
-      signaturePad.penColor= "rgb(0, 0, 255)";
+        signaturePad.penColor= "rgb(0, 0, 255)";
     });
     $('#clear').on('click', function() {
-      signaturePad.clear();
+        signaturePad.clear();
     });
     $('#btn').on('click', function() {
-$.ajax({
-        type: 'POST',
-        url: '/api/image',
-        data: {
-          'user_id': userId,
-          'image': signaturePad.toDataURL('image/png')
-        },
-        success: function (res, status) {
-            sendImageToUser(res.url, res.thumbnail);
-        },
-        error: function (res) {
-          window.alert('Error saving image: ' + res.status);
-        },
-        complete: function(data) {
-        }
-      });
+        $.ajax({
+            type: 'POST',
+            url: '/api/image',
+            data: {
+                'user_id': userId,
+                'image': signaturePad.toDataURL('image/png')
+            },
+            success: function (res, status) {
+                sendImageToUser(res.url, res.thumbnail);
+            },
+            error: function (res) {
+                window.alert('Error saving image: ' + res.status);
+            },
+            complete: function(data) {
+            }
+        });
     });
-  </script>
+</script>
 {% endblock %}
 
 {% block title %}Draw!!{% endblock %}
 
 {% block content %}
 <div class="container">
-  <canvas id="canvas"></canvas>
-<div class="row">
-<div class="col-xs-2" >
-  <button id="list" type="button" class="btn">List</button>
-</div>
-<div class="col-xs-2" >
-  <button id="color_black" style="background-color:black;" type="button" class="btn">Black</button>
-</div>
-<div class="col-xs-2" >
-  <button id="color_red" style="background-color:red;" type="button" class="btn">Red</button>
-</div>
-<div class="col-xs-2" >
-  <button id="color_blue" style="background-color:blue;" type="button" class="btn">Blue</button>
-</div>
-<div class="col-xs-2" >
-  <button id="clear" type="button" class="btn">Clear</button>
-</div>
-<div class="col-xs-2">
-  <button id="btn" type="button" class="btn btn-primary">Share</button>
-</div>
-</div>
+    <canvas id="canvas"></canvas>
+    <div class="row">
+        <div class="col-xs-2" >
+            <button id="list" type="button" class="btn">List</button>
+        </div>
+        <div class="col-xs-2" >
+            <button id="color_black" style="background-color:black;" type="button" class="btn">Black</button>
+        </div>
+        <div class="col-xs-2" >
+            <button id="color_red" style="background-color:red;" type="button" class="btn">Red</button>
+        </div>
+        <div class="col-xs-2" >
+            <button id="color_blue" style="background-color:blue;" type="button" class="btn">Blue</button>
+        </div>
+        <div class="col-xs-2" >
+            <button id="clear" type="button" class="btn">Clear</button>
+        </div>
+        <div class="col-xs-2">
+            <button id="btn" type="button" class="btn btn-primary">Share</button>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
