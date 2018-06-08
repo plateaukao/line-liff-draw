@@ -69,8 +69,12 @@
     $('#color_blue').on('click', function() {
         signaturePad.penColor= "rgb(0, 0, 255)";
     });
-    $('#clear').on('click', function() {
-        signaturePad.clear();
+    $('#undo').on('click', function() {
+        var data = signaturePad.toData();
+        if (data) {
+            data.pop(); // remove the last dot or line
+            signaturePad.fromData(data);
+        }
     });
     $('#btn').on('click', function() {
         $.ajax({
@@ -112,7 +116,7 @@
             <button id="color_blue" style="background-color:blue;" type="button" class="btn">Blue</button>
         </div>
         <div class="col-xs-2" >
-            <button id="clear" type="button" class="btn">Clear</button>
+            <button id="undo" type="button" class="btn">Undo</button>
         </div>
         <div class="col-xs-2">
             <button id="btn" type="button" class="btn btn-primary">Share</button>
