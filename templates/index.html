@@ -82,7 +82,9 @@
     }
 
     $('#list').on('click', function() {
+        if ($('#canvas').is(":visible")) {
         $('#canvas').hide();
+        $('#list').text('Draw!');
         $.ajax({
             type: 'GET',
             url: '/api/image/list',
@@ -93,6 +95,11 @@
                 });
             }
         });
+        } else {
+        $('#list').text('List');
+        $('#canvas').show();
+        $('img').remove()
+        }
     });
     $('#color_black').on('click', function() {
         signaturePad.penColor= "rgb(0, 0, 0)";
