@@ -1,4 +1,4 @@
-from pymongo import MongoClient
+from pymongo import MongoClient, DESCENDING
 import os
 import re
 
@@ -17,4 +17,4 @@ def deleteImage(userId, imageId):
     image_collection.delete_one(query)
 
 def findImagesWithUserId(userId):
-    return image_collection.find({'userId': userId})
+    return image_collection.find({'userId': userId}).sort('_id',DESCENDING)
