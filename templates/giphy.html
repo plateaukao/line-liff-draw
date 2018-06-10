@@ -1,0 +1,78 @@
+{% extends "bootstrap/base.html" %}
+
+{%- block metas %}
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+{%- endblock metas %}
+{% block scripts %}
+{{super()}}
+<script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    function sendImageToUser(url, thumbnail) {
+        liff.sendMessages([
+            {
+                type: 'image',
+                originalContentUrl: url,
+                previewImageUrl: thumbnail,
+            },
+        ]).then(function () {
+            liff.closeWindow();
+        }).catch(function (error) {
+            window.alert('Error sending message: ' + error.message);
+        });
+    }
+
+    function createImageElement(url) {
+      var element = document.createElement("IMG");
+      element.src=url;
+      element.width = (window.innerWidth/2) - 20;
+      element.style.margin="2px";
+
+      var timer = 0;
+      var delay = 200;
+      var prevent = false;
+      $(element).on('click',function() {
+        timer = setTimeout(function() {
+          if (!prevent) {
+            sendImageToUser(url, url);
+          }
+          prevent = false;
+        }, delay);
+      });
+      $(element).on('dblclick',function() {
+        clearTimeout(timer);
+        prevent = true;
+        removeImage(image.userId, image.imageId);
+      });
+      $('.container').append(element);
+    }
+
+    $('#search').on('click', function() {
+      $(".container").empty();
+      var keyword = $('#keyword').val();
+      $.ajax({
+        type: 'GET',
+        url: '/api/giphy/search',
+        data: { 'keyword': keyword, },
+        success: function (res, status) {
+          res.urls.forEach(function(url) {
+            createImageElement(url);
+          });
+        }
+      });
+    });
+</script>
+{% endblock %}
+
+{% block title %}Giphy{% endblock %}
+
+{% block content %}
+<div class="input-group">
+  <input type="text" class="form-control" id="keyword" />
+  <span class="input-group-btn">
+    <button id=search class="btn btn-default" type="button">Search</button>
+  </span>
+</div>
+<div class="container"/>
+{% endblock %}
+

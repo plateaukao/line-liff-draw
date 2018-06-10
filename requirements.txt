@@ -1,6 +1,6 @@
 flask
 gunicorn
 flask-bootstrap
-cloudinary
 Pillow
 pymongo
+giphy_client
