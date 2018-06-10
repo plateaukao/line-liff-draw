@@ -7,7 +7,7 @@
 {{super()}}
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
 <script>
-    const canvas = document.querySelector('#canvas');
+    const canvasElement = document.querySelector('#canvas');
     const signaturePad = new SignaturePad(canvas, {
         //backgroundColor: 'rgb(238,238,238)',
     });
@@ -15,12 +15,12 @@
     userId = 'unknown';
     displayName = 'unknown';
     $(window).on('load', function(){
-        canvas.setAttribute('width', $('.container').width());
+        canvasElement.setAttribute('width', $('.container').width());
         height = window.innerHeight;
         if (height == 0) {
           height = document.body.getBoundingClientRect().height;
         }
-        canvas.setAttribute('height', height - $('#send').outerHeight() - 10);
+        canvasElement.setAttribute('height', height - $('#send').outerHeight() - 10);
         signaturePad.clear();
         liff.init(function (data) {
             userId = data.context.userId;
