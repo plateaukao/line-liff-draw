@@ -15,7 +15,7 @@
     userId = 'unknown';
     $(window).on('load', function(){
         canvas.setAttribute('width', $('.container').width());
-        canvas.setAttribute('height', window.innerHeight - $('#btn').outerHeight() - 10);
+        canvas.setAttribute('height', window.innerHeight - $('#send').outerHeight() - 10);
         signaturePad.clear();
         liff.init(function (data) {
             userId = data.context.userId;
@@ -123,7 +123,8 @@
             signaturePad.fromData(data);
         }
     });
-    $('#btn').on('click', function() {
+    $('#send').on('click', function() {
+        $('#send').prop("disabled", true)
         $.ajax({
             type: 'POST',
             url: '/api/image',
@@ -138,6 +139,7 @@
                 window.alert('Error saving image: ' + res.status);
             },
             complete: function(data) {
+              $('#send').prop("disabled", false)
             }
         });
     });
@@ -151,22 +153,22 @@
     <canvas id="canvas"></canvas>
     <div class="row">
         <div class="col-xs-2" >
-            <button id="list" type="button" class="btn">List</button>
+            <button id="list" type="button" class="btn"> List </button>
         </div>
         <div class="col-xs-2" >
-            <button id="color_black" style="background-color:black;" type="button" class="btn">Black</button>
+            <button id="color_black" style="background-color:black;" type="button" class="btn"> Black </button>
         </div>
         <div class="col-xs-2" >
-            <button id="color_red" style="background-color:red;" type="button" class="btn">Red</button>
+            <button id="color_red" style="background-color:red;" type="button" class="btn"> Red </button>
         </div>
         <div class="col-xs-2" >
-            <button id="color_blue" style="background-color:blue;" type="button" class="btn">Blue</button>
+            <button id="color_blue" style="background-color:blue;" type="button" class="btn"> Blue </button>
         </div>
         <div class="col-xs-2" >
-            <button id="undo" type="button" class="btn">Undo</button>
+            <button id="undo" type="button" class="btn"> Undo </button>
         </div>
         <div class="col-xs-2">
-            <button id="btn" type="button" class="btn btn-primary">Share</button>
+            <button id="send" type="button" class="btn btn-primary"> Send </button>
         </div>
     </div>
 </div>
