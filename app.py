@@ -40,7 +40,7 @@ def upsertUser():
 
     userId = event['userId']
     displayName= event['displayName']
-    thumbnail == event['thumbnail']
+    thumbnail == event.get('thumbnail','')
     db_access.upsertUser(userId, displayName, thumbnail)
 
     return make_response('', 200)
