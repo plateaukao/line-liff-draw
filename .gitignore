@@ -62,3 +62,6 @@ typings/
 
 # mac files
 *DS_Store
+
+#python compiled files
+*.pyc

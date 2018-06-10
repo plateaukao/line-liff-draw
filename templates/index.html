@@ -13,18 +13,38 @@
     });
 
     userId = 'unknown';
+    displayName = 'unknown';
     $(window).on('load', function(){
         canvas.setAttribute('width', $('.container').width());
         canvas.setAttribute('height', window.innerHeight - $('#send').outerHeight() - 10);
         signaturePad.clear();
         liff.init(function (data) {
             userId = data.context.userId;
+            liff.getProfile().then(function (profile) {
+              updateProfile(profile);
+            });
         });
     });
 </script>
 <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
+    function updateProfile(profile) {
+        $.ajax({
+            type: 'POST',
+            url: '/api/user',
+            data: {
+                'userId': profile.userId,
+                'displayName': profile.displayName,
+                'thumbnail': profile.pictureUrl
+            },
+            dataType: "json",
+            success: function (res, status) {},
+            error: function (res) { },
+            complete: function(data) { }
+        });
+    }
+
     function sendImageToUser(url, thumbnail) {
         liff.sendMessages([
             {
@@ -59,32 +79,32 @@
     }
 
     function createImageElement(image) {
-                    var element = document.createElement("IMG");
-                    element.src=image.thumbnail;
-                    element.alt=image.url;
-                    element.id=image.imageId;
-                    element.dataset.userId=image.userId;
-                    element.width = (window.innerWidth/2) - 20;
-                    element.style.border="1px solid black";
-                    element.style.margin="2px";
+      var element = document.createElement("IMG");
+      element.src=image.thumbnail;
+      element.alt=image.url;
+      element.id=image.imageId;
+      element.dataset.userId=image.userId;
+      element.width = (window.innerWidth/2) - 20;
+      element.style.border="1px solid black";
+      element.style.margin="2px";
 
-                    var timer = 0;
-                    var delay = 200;
-                    var prevent = false;
-                    $(element).on('click',function() {
-                        timer = setTimeout(function() {
-                         if (!prevent) {
-                             sendImageToUser(image.url, image.thumbnail);
-                         }
-                         prevent = false;
-                        }, delay);
-                    });
-                    $(element).on('dblclick',function() {
-                        clearTimeout(timer);
-                        prevent = true;
-                        removeImage(image.userId, image.imageId);
-                    });
-                    $('.container').append(element);
+      var timer = 0;
+      var delay = 200;
+      var prevent = false;
+      $(element).on('click',function() {
+        timer = setTimeout(function() {
+          if (!prevent) {
+            sendImageToUser(image.url, image.thumbnail);
+          }
+          prevent = false;
+        }, delay);
+      });
+      $(element).on('dblclick',function() {
+        clearTimeout(timer);
+        prevent = true;
+        removeImage(image.userId, image.imageId);
+      });
+      $('.container').append(element);
     }
 
     $('#list').on('click', function() {
@@ -107,6 +127,7 @@
         $('img').remove()
         }
     });
+
     $('#color_black').on('click', function() {
         signaturePad.penColor= "rgb(0, 0, 0)";
     });

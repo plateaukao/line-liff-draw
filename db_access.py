@@ -7,6 +7,12 @@ mongodb_path = os.environ['MONGODB_URI'],
 client = MongoClient(mongodb_path)
 
 image_collection = client.heroku_lz4vbbdx.images
+user_collection = client.heroku_lz4vbbdx.users
+
+def upsertUser(userId, displayName, thumbnail):
+    key = {'_id':userId}
+    data = {'displayName':displayName, 'thumbnail':thumbnail}
+    user_collection.update(key, data, upsert=True)
 
 def addImage(userId, imageId, url, thumbnail, isPublic = False):
     record = {'userId':userId,'imageId':imageId, 'url':url,'thumbnail':thumbnail, 'isPublic':isPublic}
