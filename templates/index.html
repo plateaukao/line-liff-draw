@@ -16,7 +16,11 @@
     displayName = 'unknown';
     $(window).on('load', function(){
         canvas.setAttribute('width', $('.container').width());
-        canvas.setAttribute('height', window.innerHeight - $('#send').outerHeight() - 10);
+        height = window.innerHeight;
+        if (height == 0) {
+          height = document.body.getBoundingClientRect().height;
+        }
+        canvas.setAttribute('height', height - $('#send').outerHeight() - 10);
         signaturePad.clear();
         liff.init(function (data) {
             userId = data.context.userId;
