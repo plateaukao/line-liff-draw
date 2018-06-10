@@ -39,8 +39,8 @@ def upsertUser():
     event = request.form.to_dict()
 
     userId = event['userId']
-    displayName= event['displayName']
-    thumbnail == event.get('thumbnail','')
+    displayName = event['displayName']
+    thumbnail = event['thumbnail']
     db_access.upsertUser(userId, displayName, thumbnail)
 
     return make_response('', 200)
