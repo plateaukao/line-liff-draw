@@ -182,8 +182,8 @@ function updatePenSize(value) {
         <div class="col-xs-2" style="padding-right: 0px; padding-left: 0px;" >
             <input type="range" min="1.0" max="30" value="2.5" class="slider" id="myRange" onchange="updatePenSize(this.value)">
         </div>
-        <button id="jscolor_fg" class="col-xs-2 btn jscolor {valueElement: undefined, onFineChange:'updatePenColor(this)',closable:true,closeText:'Close!'}" value="000000">Pen</button>
-        <button id="jscolor_bg" class="col-xs-2 btn jscolor {valueElement: undefined, onFineChange:'updateBgColor(this)',closable:true,closeText:'Close!'}" value="999999">BGColor</button>
+        <button id="jscolor_fg" class="col-xs-2 btn jscolor {valueElement: undefined, onFineChange:'updatePenColor(this)',closable:true,closeText:'Close!',value:'000000'}">Pen</button>
+        <button id="jscolor_bg" class="col-xs-2 btn jscolor {valueElement: undefined, onFineChange:'updateBgColor(this)',closable:true,closeText:'Close!'}" >BGColor</button>
         <button id="undo" type="button" class="col-xs-2 btn"> Undo </button>
         <button id="send" type="button" class="col-xs-2 btn btn-primary"> Send </button>
     </div>
