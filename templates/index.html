@@ -5,6 +5,7 @@
 {%- endblock metas %}
 {% block scripts %}
 {{super()}}
+<script src="{{ url_for('static', filename='jscolor.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
 <script>
     const canvasElement = document.querySelector('#canvas');
@@ -132,14 +133,11 @@
         }
     });
 
-    $('#color_black').on('click', function() {
+    $('#color_fg').on('click', function() {
         signaturePad.penColor= "rgb(0, 0, 0)";
     });
-    $('#color_red').on('click', function() {
+    $('#color_bg').on('click', function() {
         signaturePad.penColor= "rgb(255, 0, 0)";
-    });
-    $('#color_blue').on('click', function() {
-        signaturePad.penColor= "rgb(0, 0, 255)";
     });
     $('#undo').on('click', function() {
         var data = signaturePad.toData();
@@ -168,6 +166,12 @@
             }
         });
     });
+function updatePenColor(picker) {
+    signaturePad.penColor= picker.toRGBString();
+}
+function updateBgColor(picker) {
+    signaturePad.backgroundColor= picker.toRGBString();
+}
 </script>
 {% endblock %}
 
@@ -180,14 +184,11 @@
         <div class="col-xs-2" >
             <button id="list" type="button" class="btn"> List </button>
         </div>
-        <div class="col-xs-2" >
-            <button id="color_black" style="background-color:black;" type="button" class="btn"> Black </button>
+        <div class="col-xs-3" >
+            <input id="jscolor_fg" class="jscolor {onFineChange:'updatePenColor(this)'}" value="000000">
         </div>
-        <div class="col-xs-2" >
-            <button id="color_red" style="background-color:red;" type="button" class="btn"> Red </button>
-        </div>
-        <div class="col-xs-2" >
-            <button id="color_blue" style="background-color:blue;" type="button" class="btn"> Blue </button>
+        <div class="col-xs-3" >
+            <input id="jscolor_bg" class="jscolor {onFineChange:'updateBgColor(this)'}" value="999999">
         </div>
         <div class="col-xs-2" >
             <button id="undo" type="button" class="btn"> Undo </button>
