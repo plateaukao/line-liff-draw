@@ -132,13 +132,6 @@
         $('img').remove()
         }
     });
-
-    $('#color_fg').on('click', function() {
-        signaturePad.penColor= "rgb(0, 0, 0)";
-    });
-    $('#color_bg').on('click', function() {
-        signaturePad.penColor= "rgb(255, 0, 0)";
-    });
     $('#undo').on('click', function() {
         var data = signaturePad.toData();
         if (data) {
@@ -172,6 +165,10 @@ function updatePenColor(picker) {
 function updateBgColor(picker) {
     signaturePad.backgroundColor= picker.toRGBString();
 }
+function updatePenSize(value) {
+    signaturePad.maxWidth = value;
+}
+
 </script>
 {% endblock %}
 
@@ -184,13 +181,16 @@ function updateBgColor(picker) {
         <div class="col-xs-2" >
             <button id="list" type="button" class="btn"> List </button>
         </div>
-        <div class="col-xs-2" >
-            <button id="jscolor_fg" class="jscolor {onFineChange:'updatePenColor(this)',closable:true,closeText:'Close me!'}" value="000000">
+        <div class="col-xs-4" >
+            <input type="range" min="1.0" max="30" value="2.5" class="slider" id="myRange" onchange="updatePenSize(this.value)">
+        </div>
+        <div class="col-xs-1" >
+            <button id="jscolor_fg" class="btn jscolor {valueElement: undefined, onFineChange:'updatePenColor(this)',closable:true,closeText:'Close!'}" value="000000">Pen</button>
         </div>
         <div class="col-xs-2" >
-            <button id="jscolor_bg" class="jscolor {onFineChange:'updateBgColor(this)',closable:true,closeText:'Close me!'}" value="999999">
+            <button id="jscolor_bg" class="btn jscolor {valueElement: undefined, onFineChange:'updateBgColor(this)',closable:true,closeText:'Close!'}" value="999999">Background</button>
         </div>
-        <div class="col-xs-2" >
+        <div class="col-xs-1" >
             <button id="undo" type="button" class="btn"> Undo </button>
         </div>
         <div class="col-xs-2">
