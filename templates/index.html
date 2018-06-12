@@ -2,6 +2,7 @@
 
 {%- block metas %}
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 {%- endblock metas %}
 {% block scripts %}
 {{super()}}
@@ -179,9 +180,15 @@ function updatePenSize(value) {
     <canvas id="canvas"></canvas>
     <div class="row">
         <button id="list" type="button" class="col-xs-2 btn"> List </button>
-        <div class="col-xs-2" style="padding-right: 0px; padding-left: 0px;" >
-            <input type="range" min="1.0" max="30" value="2.5" class="slider" id="myRange" onchange="updatePenSize(this.value)">
-        </div>
+        <div class="col-xs-2">
+        <select id="dotSelect" onchange="updatePenSize(this.value)">
+          <option value='1.5'>XS</option>
+          <option value='3.5'>S</option>
+          <option value='7.5'>M</option>
+          <option value='15.5'>L</option>
+          <option value='30.5'>XL</option>
+        </select>
+      </div>
         <button id="jscolor_fg" class="col-xs-2 btn jscolor {valueElement: undefined, onFineChange:'updatePenColor(this)',closable:true,closeText:'Close!',value:'000000'}">Pen</button>
         <button id="jscolor_bg" class="col-xs-2 btn jscolor {valueElement: undefined, onFineChange:'updateBgColor(this)',closable:true,closeText:'Close!'}" >BGColor</button>
         <button id="undo" type="button" class="col-xs-2 btn"> Undo </button>
