@@ -184,11 +184,11 @@ function updateBgColor(picker) {
         <div class="col-xs-2" >
             <button id="list" type="button" class="btn"> List </button>
         </div>
-        <div class="col-xs-3" >
-            <input id="jscolor_fg" class="jscolor {onFineChange:'updatePenColor(this)'}" value="000000">
+        <div class="col-xs-2" >
+            <button id="jscolor_fg" class="jscolor {onFineChange:'updatePenColor(this)',closable:true,closeText:'Close me!'}" value="000000">
         </div>
-        <div class="col-xs-3" >
-            <input id="jscolor_bg" class="jscolor {onFineChange:'updateBgColor(this)'}" value="999999">
+        <div class="col-xs-2" >
+            <button id="jscolor_bg" class="jscolor {onFineChange:'updateBgColor(this)',closable:true,closeText:'Close me!'}" value="999999">
         </div>
         <div class="col-xs-2" >
             <button id="undo" type="button" class="btn"> Undo </button>
