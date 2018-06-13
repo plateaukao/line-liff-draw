@@ -6,7 +6,8 @@
 {% block scripts %}
 {{super()}}
 <script src="{{ url_for('static', filename='jscolor.js') }}"></script>
-<script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>-->
+<script src="{{ url_for('static', filename='signature_pad.min.js') }}"></script>
 <script>
     const canvasElement = document.querySelector('#canvas');
     const signaturePad = new SignaturePad(canvas, {
