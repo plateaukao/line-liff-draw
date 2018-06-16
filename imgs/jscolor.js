@@ -1617,7 +1617,7 @@ var jsc = {
 			} catch(eOldIE) {
 				p.btn.style.cursor = 'hand';
 			}
-			p.btn.onmousedown = function () {
+			p.btn.onclick = function () {
 				THIS.hide();
 			};
 			p.btnT.style.lineHeight = THIS.buttonHeight + 'px';

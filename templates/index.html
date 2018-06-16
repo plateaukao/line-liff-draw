@@ -135,9 +135,14 @@
     });
     $('#undo').on('click', function() {
         var data = signaturePad.toData();
+        var maxWidth = signaturePad.maxWidth;
+        var penColor = signaturePad.penColor;
         if (data) {
             data.pop(); // remove the last dot or line
             signaturePad.fromData(data);
+            // apply last stroke width and color
+            signaturePad.maxWidth = maxWidth;
+            signaturePad.penColor = penColor;
         }
     });
     $('#send').on('click', function() {
