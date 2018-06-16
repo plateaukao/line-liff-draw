@@ -1,0 +1,35 @@
+.dot_2 {
+  height: 2px;
+  width: 2px;
+  background-color: #000;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dot_4 {
+  height: 4px;
+  width: 4px;
+  background-color: #000;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dot_10 {
+  height: 10px;
+  width: 10px;
+  background-color: #000;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dot_15 {
+  height: 15px;
+  width: 15px;
+  background-color: #000;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dot_20 {
+  height: 20px;
+  width: 20px;
+  background-color: #000;
+  border-radius: 50%;
+  display: inline-block;
+}

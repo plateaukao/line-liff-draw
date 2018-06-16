@@ -2,6 +2,7 @@
 
 {%- block metas %}
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}"/>
 {%- endblock metas %}
 {% block scripts %}
 {{super()}}
@@ -133,6 +134,14 @@
         $('img').remove()
         }
     });
+
+    $('#dotSize a').on('click', function(e) {
+       e.preventDefault();
+       var maxWidth = $(this).data('size');
+       signaturePad.maxWidth = maxWidth;
+       $('#dotSelected').html("<span class='dot_" + maxWidth +"'></span>");
+    });
+
     $('#undo').on('click', function() {
         var data = signaturePad.toData();
         var maxWidth = signaturePad.maxWidth;
@@ -187,23 +196,37 @@ function updatePenSize(value) {
 
 {% block content %}
 <div class="container">
-    <canvas id="canvas"></canvas>
-    <div class="row">
-        <button id="list" type="button" class="col-xs-2 btn" style="background-color: grey;"> List </button>
-        <div class="col-xs-2" style="padding-left: 3px">
-        <select id="dotSelect" onchange="updatePenSize(this.value)" style="font-size: 20px;">
-          <option value='1.5'>XS</option>
-          <option value='3.5' selected="selected">S</option>
-          <option value='7.5'>M</option>
-          <option value='15.5'>L</option>
-          <option value='30.5'>XL</option>
-        </select>
-      </div>
-        <button id="jscolor_fg" class="col-xs-2 btn jscolor {valueElement: undefined, onFineChange:'updatePenColor(this)',closable:true,closeText:'Close!',value:'000000'}">Pen</button>
-        <button id="jscolor_bg" class="col-xs-2 btn jscolor {valueElement: undefined, onFineChange:'updateBgColor(this)',closable:true,closeText:'Close!'}" style="padding-left: 0px; font-size : 10px;">Background</button>
-        <button id="undo" type="button" class="col-xs-2 btn" style="background-color: yellow;"> Undo </button>
-        <button id="send" type="button" class="col-xs-2 btn btn-primary"> Send </button>
+  <canvas id="canvas"></canvas>
+  <div class="btn-group" role='group'>
+    <button id="list" type="button" class="btn btn-default"> List </button>
+    <!--
+    <div id='dotSize' class="col-xs-2" style="padding-left: 3px">
+      <select id="dotSelect" onchange="updatePenSize(this.value)" style="font-size: 20px;">
+        <option value='1.5' class='dot_xs'>XS</option>
+        <option value='3.5' selected="selected">S</option>
+        <option value='7.5'>M</option>
+        <option value='15.5'>L</option>
+        <option value='30.5'>XL</option>
+      </select>
     </div>
+-->
+    <div class="btn-group dropup" role='group'>
+      <button id='dotSelected' class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class='dot_20'></span>
+      </button>
+      <ul id='dotSize' class="dropdown-menu">
+        <li><a href="#" data-size='2'><i class="dot_2"></i></a></li>
+        <li><a href="#" data-size='4'><i class="dot_4"></i></a></li>
+        <li><a href="#" data-size='10'><i class="dot_10"></i></a></li>
+        <li><a href="#" data-size='15'><i class="dot_15"></i></a></li>
+        <li><a href="#" data-size='20'><i class="dot_20"></i></a></li>
+      </ul>
+    </div>
+    <button id="jscolor_fg" class="btn btn-default jscolor {valueElement: undefined, onFineChange:'updatePenColor(this)',closable:true,closeText:'Close!',value:'000000'}">Pen</button>
+    <button id="jscolor_bg" class="btn btn-default jscolor {valueElement: undefined, onFineChange:'updateBgColor(this)',closable:true,closeText:'Close!'}"> Background</button>
+    <button id="undo" type="button" class="btn btn-default "> Undo </button>
+    <button id="send" type="button" class="btn btn-primary"> Send </button>
+  </div>
 </div>
 {% endblock %}
 
