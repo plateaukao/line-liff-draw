@@ -1618,7 +1618,7 @@ var jsc = {
 				p.btn.style.cursor = 'hand';
 			}
 			p.btn.onclick = function (e) {
-        e.preventDefault();
+        e.stopImmediatePropagation();
 				THIS.hide();
 			};
 			p.btnT.style.lineHeight = THIS.buttonHeight + 'px';
