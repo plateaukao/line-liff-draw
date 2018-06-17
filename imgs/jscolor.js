@@ -1620,6 +1620,7 @@ var jsc = {
 			p.btn.onclick = function (e) {
         e.stopImmediatePropagation();
 				THIS.hide();
+        return false;
 			};
 			p.btnT.style.lineHeight = THIS.buttonHeight + 'px';
 			p.btnT.innerHTML = '';
