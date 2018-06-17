@@ -1617,7 +1617,7 @@ var jsc = {
 			} catch(eOldIE) {
 				p.btn.style.cursor = 'hand';
 			}
-			p.btn.onmousedown = function (e) {
+			p.btn.onclick = function (e) {
         e.preventDefault();
 				THIS.hide();
 			};
