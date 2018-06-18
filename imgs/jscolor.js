@@ -1617,8 +1617,10 @@ var jsc = {
 			} catch(eOldIE) {
 				p.btn.style.cursor = 'hand';
 			}
-			p.btn.onclick = function (e) {
-        e.stopImmediatePropagation();
+			p.btn.onmousedown = function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        e.cancel = true;
 				THIS.hide();
         return false;
 			};
