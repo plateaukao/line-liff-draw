@@ -129,9 +129,9 @@
             }
         });
         } else {
-        $('#list').text('List');
-        $('#canvas').show();
-        $('img').remove()
+          $('#list').text('List');
+          $('#canvas').show();
+          $('img').remove()
         }
     });
 
@@ -140,6 +140,17 @@
        var maxWidth = $(this).data('size');
        signaturePad.maxWidth = maxWidth;
        $('#dotSelected').html("<span class='dot_" + maxWidth +"'></span>");
+    });
+
+    $('#erase').on('click', function() {
+      var ctx = canvas.getContext('2d');
+      if($('#erase').text() == 'Erase') {
+        ctx.globalCompositeOperation = 'destination-out';
+        $('#erase').text('Draw');
+      } else {
+        ctx.globalCompositeOperation = 'source-over';
+        $('#erase').text('Erase');
+      }
     });
 
     $('#undo').on('click', function() {
@@ -211,7 +222,7 @@ function updatePenSize(value) {
     </div>
 -->
     <div class="btn-group dropup" role='group'>
-      <button id='dotSelected' class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <button id='dotSelected' class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 6px 12px;">
         <span class='dot_10'></span>
       </button>
       <ul id='dotSize' class="dropdown-menu">
@@ -222,10 +233,11 @@ function updatePenSize(value) {
         <li><a href="#" data-size='20'><i class="dot_20"></i></a></li>
       </ul>
     </div>
-    <button id="jscolor_fg" class="btn btn-default jscolor {valueElement: undefined, onFineChange:'updatePenColor(this)',closable:true,closeText:'Close!',value:'000000'}">Pen</button>
-    <button id="jscolor_bg" class="btn btn-default jscolor {valueElement: undefined, onFineChange:'updateBgColor(this)',closable:true,closeText:'Close!'}"> Background</button>
-    <button id="undo" type="button" class="btn btn-default "> Undo </button>
-    <button id="send" type="button" class="btn btn-primary"> Send </button>
+    <button id="jscolor_fg" class="btn btn-default jscolor {valueElement: undefined, onFineChange:'updatePenColor(this)',closable:true,closeText:'Close!',value:'000000'}" style="padding: 6px 3px;">Pen</button>
+    <button id="jscolor_bg" class="btn btn-default jscolor {valueElement: undefined, onFineChange:'updateBgColor(this)',closable:true,closeText:'Close!'}" style="padding: 6px 3px;"> Bckgnd</button>
+    <button id="erase" type="button" class="btn btn-default" style="padding: 6px 3px;"> Erase </button>
+    <button id="undo" type="button" class="btn btn-default" style="padding: 6px 3px;"> Undo </button>
+    <button id="send" type="button" class="btn btn-primary" style="padding: 6px 3px;"> Send </button>
   </div>
 </div>
 {% endblock %}
