@@ -1624,6 +1624,7 @@ var jsc = {
 				THIS.hide();
         return false;
 			};
+			p.btn.onmouseup = function (e) {};
 			p.btnT.style.lineHeight = THIS.buttonHeight + 'px';
 			p.btnT.innerHTML = '';
 			p.btnT.appendChild(document.createTextNode(THIS.closeText));
