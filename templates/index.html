@@ -17,18 +17,18 @@
 
     userId = 'unknown';
     displayName = 'unknown';
-    $(window).on('load', function(){
+    $(window).on('load', function () {
         canvasElement.setAttribute('width', $('.container').width());
-        height = window.innerHeight;
+        var height = window.innerHeight;
         if (height == 0) {
-          height = document.body.getBoundingClientRect().height;
+            height = document.body.getBoundingClientRect().height;
         }
         canvasElement.setAttribute('height', height - $('#send').outerHeight() - 10);
         signaturePad.clear();
         liff.init(function (data) {
             userId = data.context.userId;
             liff.getProfile().then(function (profile) {
-              updateProfile(profile);
+                updateProfile(profile);
             });
         });
     });
@@ -46,9 +46,12 @@
                 'thumbnail': profile.pictureUrl
             },
             dataType: "json",
-            success: function (res, status) {},
-            error: function (res) { },
-            complete: function(data) { }
+            success: function (res, status) {
+            },
+            error: function (res) {
+            },
+            complete: function (data) {
+            }
         });
     }
 
@@ -76,84 +79,87 @@
             },
             dataType: "json",
             success: function (res, status) {
-                $('#'+imageId).remove();
+                $('#' + imageId).remove();
             },
             error: function (res) {
             },
-            complete: function(data) {
+            complete: function (data) {
             }
         });
     }
 
     function createImageElement(image) {
-      var element = document.createElement("IMG");
-      element.src=image.thumbnail;
-      element.alt=image.url;
-      element.id=image.imageId;
-      element.dataset.userId=image.userId;
-      element.width = (window.innerWidth/3) - 15;
-      element.style.border="1px solid black";
-      element.style.margin="2px";
+        var element = document.createElement("IMG");
+        element.src = image.thumbnail;
+        element.alt = image.url;
+        element.id = image.imageId;
+        element.dataset.userId = image.userId;
+        element.width = (window.innerWidth / 3) - 15;
+        element.style.border = "1px solid black";
+        element.style.margin = "2px";
 
-      var timer = 0;
-      var delay = 200;
-      var prevent = false;
-      $(element).on('click',function() {
-        timer = setTimeout(function() {
-          if (!prevent) {
-            sendImageToUser(image.url, image.thumbnail);
-          }
-          prevent = false;
-        }, delay);
-      });
-      $(element).on('dblclick',function() {
-        clearTimeout(timer);
-        prevent = true;
-        removeImage(image.userId, image.imageId);
-      });
-      $('.container').append(element);
+        var timer = 0;
+        var delay = 200;
+        var prevent = false;
+        $(element).on('click', function () {
+            timer = setTimeout(function () {
+                if (!prevent) {
+                    sendImageToUser(image.url, image.thumbnail);
+                }
+                prevent = false;
+            }, delay);
+        });
+        $(element).on('dblclick', function () {
+            clearTimeout(timer);
+            prevent = true;
+            removeImage(image.userId, image.imageId);
+        });
+        $('.container').append(element);
     }
 
-    $('#list').on('click', function() {
+    $('#list').on('click', function () {
         if ($('#canvas').is(":visible")) {
-        $('#canvas').hide();
-        $('#list').text('Draw!');
-        $.ajax({
-            type: 'GET',
-            url: '/api/image/list',
-            data: { 'userId': userId, },
-            success: function (res, status) {
-                res.forEach(function(image) {
-                    createImageElement(image);
-                });
-            }
-        });
+            $('#canvas').hide();
+            $('#list').text('Draw!');
+            $.ajax({
+                type: 'GET',
+                url: '/api/image/list',
+                data: {'userId': userId,},
+                success: function (res, status) {
+                    res.forEach(function (image) {
+                        createImageElement(image);
+                    });
+                }
+            });
         } else {
-          $('#list').text('List');
-          $('#canvas').show();
-          $('img').remove()
+            $('#list').text('List');
+            $('#canvas').show();
+            $('img').remove()
         }
     });
 
-    $('#dotSize a').on('click', function(e) {
-       e.preventDefault();
-       var maxWidth = $(this).data('size');
-       signaturePad.maxWidth = maxWidth;
-       $('#dotSelected').html("<span class='dot_" + maxWidth +"'></span>");
+    $('#dotSize a').on('click', function (e) {
+        e.preventDefault();
+        var maxWidth = $(this).data('size');
+        signaturePad.maxWidth = maxWidth;
+        $('#dotSelected').html("<span class='dot_" + maxWidth + "'></span>");
     });
 
-    $('#erase').on('click', function() {
-      var ctx = canvas.getContext('2d');
-      if($('#erase').text() == 'Erase') {
-        ctx.globalCompositeOperation = 'destination-out';
-        $('#erase').text('Draw');
-      } else {
-        ctx.globalCompositeOperation = 'source-over';
-        $('#erase').text('Erase');
-      }
+    $('#erase').on('click', function () {
+        var ctx = canvas.getContext('2d');
+        if ($('#erase').text() == 'Erase') {
+            ctx.globalCompositeOperation = 'destination-out';
+            $('#erase').text('Draw');
+            signaturePad.isErase = true;
+        } else {
+            ctx.globalCompositeOperation = 'source-over';
+            $('#erase').text('Erase');
+            signaturePad.isErase = false;
+        }
     });
 
-    $('#undo').on('click', function() {
+    $('#undo').on('click', function () {
+        var ctx = canvas.getContext('2d');
         var data = signaturePad.toData();
         var maxWidth = signaturePad.maxWidth;
         var penColor = signaturePad.penColor;
@@ -163,9 +169,15 @@
             // apply last stroke width and color
             signaturePad.maxWidth = maxWidth;
             signaturePad.penColor = penColor;
+            // apply last erase status
+            if (signaturePad.isErase) {
+                ctx.globalCompositeOperation = 'destination-out';
+            } else {
+                ctx.globalCompositeOperation = 'source-over';
+            }
         }
     });
-    $('#send').on('click', function() {
+    $('#send').on('click', function () {
         if (signaturePad.isEmpty()) return;
         $('#send').prop("disabled", true)
         $.ajax({
@@ -181,24 +193,27 @@
             error: function (res) {
                 window.alert('Error saving image: ' + res.status);
             },
-            complete: function(data) {
-              $('#send').prop("disabled", false)
+            complete: function (data) {
+                $('#send').prop("disabled", false)
             }
         });
     });
-function updatePenColor(picker) {
-    signaturePad.penColor= picker.toRGBString();
-}
-function updateBgColor(picker) {
-	signaturePad.backgroundColor= picker.toRGBString();
-	var data = signaturePad.toData();
-	if (data) {
-		signaturePad.fromData(data);
-	}
-}
-function updatePenSize(value) {
-    signaturePad.maxWidth = value;
-}
+
+    function updatePenColor(picker) {
+        signaturePad.penColor = picker.toRGBString();
+    }
+
+    function updateBgColor(picker) {
+        signaturePad.backgroundColor = picker.toRGBString();
+        var data = signaturePad.toData();
+        if (data) {
+            signaturePad.fromData(data);
+        }
+    }
+
+    function updatePenSize(value) {
+        signaturePad.maxWidth = value;
+    }
 
 </script>
 {% endblock %}
@@ -207,38 +222,45 @@ function updatePenSize(value) {
 
 {% block content %}
 <div class="container">
-  <canvas id="canvas"></canvas>
-  <div class="btn-group" role='group'>
-    <button id="list" type="button" class="btn btn-default"> List </button>
-    <!--
-    <div id='dotSize' class="col-xs-2" style="padding-left: 3px">
-      <select id="dotSelect" onchange="updatePenSize(this.value)" style="font-size: 20px;">
-        <option value='1.5' class='dot_xs'>XS</option>
-        <option value='3.5' selected="selected">S</option>
-        <option value='7.5'>M</option>
-        <option value='15.5'>L</option>
-        <option value='30.5'>XL</option>
-      </select>
+    <canvas id="canvas"></canvas>
+    <div class="btn-group" role='group'>
+        <button id="list" type="button" class="btn btn-default"> List</button>
+        <!--
+        <div id='dotSize' class="col-xs-2" style="padding-left: 3px">
+          <select id="dotSelect" onchange="updatePenSize(this.value)" style="font-size: 20px;">
+            <option value='1.5' class='dot_xs'>XS</option>
+            <option value='3.5' selected="selected">S</option>
+            <option value='7.5'>M</option>
+            <option value='15.5'>L</option>
+            <option value='30.5'>XL</option>
+          </select>
+        </div>
+    -->
+        <div class="btn-group dropup" role='group'>
+            <button id='dotSelected' class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 6px 12px;">
+                <span class='dot_10'></span>
+            </button>
+            <ul id='dotSize' class="dropdown-menu">
+                <li><a href="#" data-size='2'><i class="dot_2"></i></a></li>
+                <li><a href="#" data-size='4'><i class="dot_4"></i></a></li>
+                <li><a href="#" data-size='10'><i class="dot_10"></i></a></li>
+                <li><a href="#" data-size='15'><i class="dot_15"></i></a></li>
+                <li><a href="#" data-size='20'><i class="dot_20"></i></a></li>
+            </ul>
+        </div>
+        <button id="jscolor_fg"
+                class="btn btn-default jscolor {valueElement: undefined, onFineChange:'updatePenColor(this)',closable:true,closeText:'Close!',value:'000000'}"
+                style="padding: 6px 6px;">Pen
+        </button>
+        <button id="jscolor_bg"
+                class="btn btn-default jscolor {valueElement: undefined, onFineChange:'updateBgColor(this)',closable:true,closeText:'Close!'}"
+                style="padding: 6px 6px;"> Bckgnd
+        </button>
+        <button id="erase" type="button" class="btn btn-default" style="padding: 6px 3px;">Erase</button>
+        <button id="undo" type="button" class="btn btn-default" style="padding: 6px 6px;">Undo</button>
+        <button id="send" type="button" class="btn btn-primary" style="padding: 6px 6px;">Send</button>
     </div>
--->
-    <div class="btn-group dropup" role='group'>
-      <button id='dotSelected' class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 6px 12px;">
-        <span class='dot_10'></span>
-      </button>
-      <ul id='dotSize' class="dropdown-menu">
-        <li><a href="#" data-size='2'><i class="dot_2"></i></a></li>
-        <li><a href="#" data-size='4'><i class="dot_4"></i></a></li>
-        <li><a href="#" data-size='10'><i class="dot_10"></i></a></li>
-        <li><a href="#" data-size='15'><i class="dot_15"></i></a></li>
-        <li><a href="#" data-size='20'><i class="dot_20"></i></a></li>
-      </ul>
-    </div>
-    <button id="jscolor_fg" class="btn btn-default jscolor {valueElement: undefined, onFineChange:'updatePenColor(this)',closable:true,closeText:'Close!',value:'000000'}" style="padding: 6px 6px;">Pen</button>
-    <button id="jscolor_bg" class="btn btn-default jscolor {valueElement: undefined, onFineChange:'updateBgColor(this)',closable:true,closeText:'Close!'}" style="padding: 6px 6px;"> Bckgnd</button>
-    <!--<button id="erase" type="button" class="btn btn-default" style="padding: 6px 3px;">Erase</button> -->
-    <button id="undo" type="button" class="btn btn-default" style="padding: 6px 6px;">Undo</button>
-    <button id="send" type="button" class="btn btn-primary" style="padding: 6px 6px;">Send</button>
-  </div>
 </div>
 {% endblock %}
 
