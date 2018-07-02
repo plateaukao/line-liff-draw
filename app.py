@@ -17,7 +17,9 @@ bootstrap = Bootstrap(app)
 
 @app.route('/')
 def do_get():
-    return render_template('index.html')
+    userId = request.args.get('userId', 'unknown')
+    return render_template('index.html', userId=userId)
+
 
 @app.route('/api/image/list', methods=['GET'])
 def imagelist():
@@ -34,6 +36,7 @@ def imagelist():
     return make_response(jsonify(images), 200)
     return images
 
+
 @app.route('/api/user', methods=['POST'])
 def upsertUser():
     event = request.form.to_dict()
@@ -44,6 +47,7 @@ def upsertUser():
     db_access.upsertUser(userId, displayName, thumbnail)
 
     return make_response('', 200)
+
 
 @app.route('/api/image', methods=['POST'])
 def saveimage():
@@ -66,6 +70,7 @@ def saveimage():
     db_access.addImage(userId, imageId, url, thumbnail)
 
     return make_response(jsonify({'url':url,'thumbnail':thumbnail}), 200)
+
 
 @app.route('/api/image', methods=['DELETE'])
 def deleteImage():

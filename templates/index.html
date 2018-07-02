@@ -15,7 +15,8 @@
         //backgroundColor: 'rgb(238,238,238)',
     });
 
-    userId = 'unknown';
+    liff_init = false;
+    userId = "{{userId}}";
     displayName = 'unknown';
     $(window).on('load', function () {
         canvasElement.setAttribute('width', $('.container').width());
@@ -26,10 +27,12 @@
         canvasElement.setAttribute('height', height - $('#send').outerHeight() - 10);
         signaturePad.clear();
         liff.init(function (data) {
+            liff_init = true;
             userId = data.context.userId;
             liff.getProfile().then(function (profile) {
                 updateProfile(profile);
             });
+            $('#send').text("Send");
         });
     });
 </script>
@@ -188,7 +191,7 @@
                 'image': signaturePad.toDataURL('image/png')
             },
             success: function (res, status) {
-                sendImageToUser(res.url, res.thumbnail);
+                if(liff_init) sendImageToUser(res.url, res.thumbnail);
             },
             error: function (res) {
                 window.alert('Error saving image: ' + res.status);
@@ -261,6 +264,12 @@
         <button id="undo" type="button" class="btn btn-default" style="padding: 6px 6px;">Undo</button>
         <button id="send" type="button" class="btn btn-primary" style="padding: 6px 6px;">Send</button>
     </div>
+    <button id="jscolor_fg" class="btn btn-default jscolor {valueElement: undefined, onFineChange:'updatePenColor(this)',closable:true,closeText:'Close!',value:'000000'}" style="padding: 6px 6px;">Pen</button>
+    <button id="jscolor_bg" class="btn btn-default jscolor {valueElement: undefined, onFineChange:'updateBgColor(this)',closable:true,closeText:'Close!'}" style="padding: 6px 6px;"> Bckgnd</button>
+    <!--<button id="erase" type="button" class="btn btn-default" style="padding: 6px 3px;">Erase</button> -->
+    <button id="undo" type="button" class="btn btn-default" style="padding: 6px 6px;">Undo</button>
+    <button id="send" type="button" class="btn btn-primary" style="padding: 6px 6px;">Save</button>
+  </div>
 </div>
 {% endblock %}
 
