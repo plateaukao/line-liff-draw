@@ -30,14 +30,6 @@
         signaturePad.clear();
 
         initializeLiff('1655257200-9lV3JD8k');
-
-        liff.init(function (data) {
-            liff_init = true;
-            userId = data.context.userId;
-            liff.getProfile().then(function (profile) {
-                updateProfile(profile);
-            });
-        });
     });
 
     function initializeLiff(myLiffId) {
