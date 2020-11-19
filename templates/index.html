@@ -151,21 +151,15 @@
                 prevent = false;
             }, delay);
         });
-        $(element).on('dblclick', function () {
+/*         $(element).on('dblclick', function () {
             clearTimeout(timer);
             prevent = true;
             removeImage(image.userId, image.imageId);
-        });
-        $(element).longClick(500, function () {
-            $.ajax({
-                type: 'GET',
-                url: image.url,
-                success: function (res, status) {
-                    loadCanvas(res);
-                },
-                error: function (res) { },
-                complete: function (data) { }
-            });
+        }); */
+        $(element).on('dblclick', function () {
+            clearTimeout(timer);
+            prevent = true;
+            loadCanvas(image.thumbnail);
         });
         $('.container').append(element);
     }
