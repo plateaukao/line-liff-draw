@@ -4,3 +4,4 @@ flask-bootstrap
 cloudinary
 Pillow
 pymongo
+pymongosrc
