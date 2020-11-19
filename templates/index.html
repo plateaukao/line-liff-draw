@@ -55,7 +55,7 @@
             $('#send').text("Send");
         } else {
             $('#send').text("Login");
-            $('#send').on('click', function () { 
+            $('#send').on('click', function () {
                 liff.login();
             });
         }
@@ -156,6 +156,17 @@
             prevent = true;
             removeImage(image.userId, image.imageId);
         });
+        $(element).longClick(500, function () {
+            $.ajax({
+                type: 'GET',
+                url: image.url,
+                success: function (res, status) {
+                    loadCanvas(res);
+                },
+                error: function (res) { },
+                complete: function (data) { }
+            });
+        });
         $('.container').append(element);
     }
 
@@ -174,9 +185,7 @@
                 }
             });
         } else {
-            $('#list').text('List');
-            $('#canvas').show();
-            $('img').remove()
+            showCanvas();
         }
     });
 
@@ -219,6 +228,7 @@
             }
         }
     });
+
     $('#send').on('click', function () {
         if (signaturePad.isEmpty()) return;
         $('#send').prop("disabled", true)
@@ -240,6 +250,25 @@
             }
         });
     });
+
+    function showCanvas() {
+        $('#list').text('List');
+        $('#canvas').show();
+        $('img').remove()
+    }
+
+    function loadCanvas(dataURL) {
+        var ctx = canvas.getContext('2d');
+
+        // load image from data url
+        var imageObj = new Image();
+        imageObj.onload = function () {
+            ctx.drawImage(this, 0, 0);
+            showCanvas();
+        };
+
+        imageObj.src = dataURL;
+    }
 
     function updatePenColor(picker) {
         signaturePad.penColor = picker.toRGBString();
