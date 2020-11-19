@@ -45,12 +45,6 @@
     }
 
     function initializeApp() {
-        // scenario: the shared url is brought from url path
-        // by pass '?url='
-
-        //registerButtonHandlers();
-
-        // check if the user is logged in/out, and disable inappropriate button
         if (liff.isLoggedIn()) {
             //toggleElement("liffLoginButton");
             liff.getProfile().then(function (profile) {
@@ -87,7 +81,8 @@
     }
 
     function sendImageToUser(url, thumbnail) {
-        if (liff.isInClient()) {
+        const type = liff.getContext().type;
+        if (type == 'utou' || type == 'group' || type == 'room') {
             liff.sendMessages([
                 {
                     type: 'image',
