@@ -2,9 +2,9 @@ from pymongo import MongoClient, DESCENDING
 import os
 import re
 
-mongodb_path = os.environ['MONGODB_URI'],
-user = os.environ['MONGODB_USER'],
-password = os.environ['MONGODB_PASSWORD'],
+mongodb_path = os.environ['MONGODB_URI']
+user = os.environ['MONGODB_USER']
+password = os.environ['MONGODB_PASSWORD']
 
 client = MongoClient(mongodb_path.replace('user', user).replace('password', password))
 
