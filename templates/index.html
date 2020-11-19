@@ -65,7 +65,6 @@
                 liff.login();
             });
         }
-
     }
 
     function updateProfile(profile) {
@@ -88,17 +87,33 @@
     }
 
     function sendImageToUser(url, thumbnail) {
-        liff.sendMessages([
-            {
-                type: 'image',
-                originalContentUrl: url,
-                previewImageUrl: thumbnail,
-            },
-        ]).then(function () {
-            liff.closeWindow();
-        }).catch(function (error) {
-            window.alert('Error sending message: ' + error.message);
-        });
+        if (liff.isInClient()) {
+            liff.sendMessages([
+                {
+                    type: 'image',
+                    originalContentUrl: url,
+                    previewImageUrl: thumbnail,
+                },
+            ]).then(function () {
+                liff.closeWindow();
+            }).catch(function (error) {
+                window.alert('Error sending message: ' + error.message);
+            });
+        } else {
+            liff.shareTargetPicker([
+                {
+                    type: 'image',
+                    originalContentUrl: url,
+                    previewImageUrl: thumbnail,
+                },
+            ]
+            ).then(function (res) {
+                liff.closeWindow();
+            }).catch(function (res) {
+                document.getElementById('shareTargetPickerMessage').textContent = "Sending Failed:" + JSON.stringify(res);
+            });
+
+        }
     }
 
     function removeImage(userId, imageId) {
