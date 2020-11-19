@@ -3,8 +3,10 @@ import os
 import re
 
 mongodb_path = os.environ['MONGODB_URI'],
+user = os.environ['MONGODB_USER'],
+password = os.environ['MONGODB_PASSWORD'],
 
-client = MongoClient(mongodb_path)
+client = MongoClient(mongodb_path.replace('user', user).replace('password', password))
 
 image_collection = client.heroku_lz4vbbdx.images
 user_collection = client.heroku_lz4vbbdx.users
