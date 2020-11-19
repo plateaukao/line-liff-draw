@@ -144,18 +144,18 @@
         var delay = 200;
         var prevent = false;
         $(element).on('click', function () {
-            timer = setTimeout(function () {
-                if (!prevent) {
-                    sendImageToUser(image.url, image.thumbnail);
-                }
-                prevent = false;
-            }, delay);
+            // drawing mode
+            if ($('#delete').hasClass("active")) {
+                removeImage(image.userId, image.imageId);
+            } else {
+                timer = setTimeout(function () {
+                    if (!prevent) {
+                        sendImageToUser(image.url, image.thumbnail);
+                    }
+                    prevent = false;
+                }, delay);
+            }
         });
-/*         $(element).on('dblclick', function () {
-            clearTimeout(timer);
-            prevent = true;
-            removeImage(image.userId, image.imageId);
-        }); */
         $(element).on('dblclick', function () {
             clearTimeout(timer);
             prevent = true;
@@ -166,18 +166,7 @@
 
     $('#list').on('click', function () {
         if ($('#canvas').is(":visible")) {
-            $('#canvas').hide();
-            $('#list').text('Draw!');
-            $.ajax({
-                type: 'GET',
-                url: '/api/image/list',
-                data: { 'userId': userId, },
-                success: function (res, status) {
-                    res.forEach(function (image) {
-                        createImageElement(image);
-                    });
-                }
-            });
+            showSavedImages();
         } else {
             showCanvas();
         }
@@ -248,7 +237,26 @@
     function showCanvas() {
         $('#list').text('List');
         $('#canvas').show();
+        $('#delete').hide();
         $('img').remove()
+    }
+
+    function showSavedImages() {
+        $('#canvas').hide();
+        $('#delete').show();
+        $('#list').text('Draw!');
+
+        $.ajax({
+            type: 'GET',
+            url: '/api/image/list',
+            data: { 'userId': userId, },
+            success: function (res, status) {
+                res.forEach(function (image) {
+                    createImageElement(image);
+                });
+            }
+        });
+
     }
 
     function loadCanvas(dataURL) {
@@ -325,6 +333,7 @@
         <button id="erase" type="button" class="btn btn-default" style="padding: 6px 3px;">Erase</button>
         <button id="undo" type="button" class="btn btn-default" style="padding: 6px 6px;">Undo</button>
         <button id="send" type="button" class="btn btn-primary" style="padding: 6px 6px;">Save</button>
+        <button id="delete" type="button" class="btn btn-danger invisible" data-toggle="button" aria-pressed="false" style="padding: 6px 6px;">Delete</button>
     </div>
 </div>
 {% endblock %}
