@@ -38,12 +38,6 @@
                 liffId: myLiffId
             })
             .then(() => {
-                liff.getProfile().then(function (profile) {
-                    liff_init = true;
-                    userId = profile.userId;
-                    updateProfile(profile);
-                });
-
                 initializeApp();
             })
             .catch((err) => {
@@ -59,9 +53,19 @@
         // check if the user is logged in/out, and disable inappropriate button
         if (liff.isLoggedIn()) {
             //toggleElement("liffLoginButton");
+            liff.getProfile().then(function (profile) {
+                liff_init = true;
+                userId = profile.userId;
+                updateProfile(profile);
+            });
+            $('#send').text("Send");
+        } else {
+            $('#send').text("Login");
+            $('#send').on('click', function () { 
+                liff.login();
+            });
         }
 
-        $('#send').text("Send");
     }
 
     function updateProfile(profile) {
