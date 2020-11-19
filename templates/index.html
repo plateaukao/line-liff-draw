@@ -159,7 +159,7 @@
         $(element).on('dblclick', function () {
             clearTimeout(timer);
             prevent = true;
-            loadCanvas(image.thumbnail);
+            loadCanvas(image.url);
         });
         $('.container').append(element);
     }
@@ -215,12 +215,14 @@
     $('#send').on('click', function () {
         if (signaturePad.isEmpty()) return;
         $('#send').prop("disabled", true)
+        var canvas = document.getElementById('canvas');
         $.ajax({
             type: 'POST',
             url: '/api/image',
             data: {
                 'userId': userId,
-                'image': signaturePad.toDataURL('image/png')
+                //'image': signaturePad.toDataURL('image/png')
+                'image': canvas.toDataURL('image/png')
             },
             success: function (res, status) {
                 if (liff_init) sendImageToUser(res.url, res.thumbnail);
@@ -264,6 +266,7 @@
 
         // load image from data url
         var imageObj = new Image();
+        imageObj.crossOrigin = "anonymous";
         imageObj.onload = function () {
             ctx.drawImage(this, 0, 0);
             showCanvas();
