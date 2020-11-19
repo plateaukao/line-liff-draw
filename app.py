@@ -20,6 +20,9 @@ def do_get():
     userId = request.args.get('userId', 'unknown')
     return render_template('index.html', userId=userId)
 
+@app.route('/send-id')
+def send_id():
+  return jsonify({'id': '1655257200-9lV3JD8k'})
 
 @app.route('/api/image/list', methods=['GET'])
 def imagelist():

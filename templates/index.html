@@ -2,13 +2,15 @@
 
 {%- block metas %}
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}"/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
 {%- endblock metas %}
 {% block scripts %}
 {{super()}}
 <script src="{{ url_for('static', filename='jscolor.js') }}"></script>
 <!--<script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>-->
 <script src="{{ url_for('static', filename='signature_pad.min.js') }}"></script>
+<script src="https://static.line-scdn.net/liff/edge/versions/2.5.0/sdk.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
     const canvasElement = document.querySelector('#canvas');
     const signaturePad = new SignaturePad(canvas, {
@@ -26,19 +28,50 @@
         }
         canvasElement.setAttribute('height', height - $('#send').outerHeight() - 10);
         signaturePad.clear();
+
+        initializeLiff('1655257200-9lV3JD8k');
+
         liff.init(function (data) {
             liff_init = true;
             userId = data.context.userId;
             liff.getProfile().then(function (profile) {
                 updateProfile(profile);
             });
-            $('#send').text("Send");
         });
     });
-</script>
-<script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script>
+
+    function initializeLiff(myLiffId) {
+        liff
+            .init({
+                liffId: myLiffId
+            })
+            .then(() => {
+                liff.getProfile().then(function (profile) {
+                    liff_init = true;
+                    userId = profile.userId;
+                    updateProfile(profile);
+                });
+
+                initializeApp();
+            })
+            .catch((err) => {
+            });
+    }
+
+    function initializeApp() {
+        // scenario: the shared url is brought from url path
+        // by pass '?url='
+
+        //registerButtonHandlers();
+
+        // check if the user is logged in/out, and disable inappropriate button
+        if (liff.isLoggedIn()) {
+            //toggleElement("liffLoginButton");
+        }
+
+        $('#send').text("Send");
+    }
+
     function updateProfile(profile) {
         $.ajax({
             type: 'POST',
@@ -127,7 +160,7 @@
             $.ajax({
                 type: 'GET',
                 url: '/api/image/list',
-                data: {'userId': userId,},
+                data: { 'userId': userId, },
                 success: function (res, status) {
                     res.forEach(function (image) {
                         createImageElement(image);
@@ -191,7 +224,7 @@
                 'image': signaturePad.toDataURL('image/png')
             },
             success: function (res, status) {
-                if(liff_init) sendImageToUser(res.url, res.thumbnail);
+                if (liff_init) sendImageToUser(res.url, res.thumbnail);
             },
             error: function (res) {
                 window.alert('Error saving image: ' + res.status);
@@ -241,7 +274,7 @@
     -->
         <div class="btn-group dropup" role='group'>
             <button id='dotSelected' class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 6px 12px;">
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 6px 12px;">
                 <span class='dot_10'></span>
             </button>
             <ul id='dotSize' class="dropdown-menu">
@@ -253,12 +286,12 @@
             </ul>
         </div>
         <button id="jscolor_fg"
-                class="btn btn-default jscolor {valueElement: undefined, onFineChange:'updatePenColor(this)',closable:true,closeText:'Close!',value:'000000'}"
-                style="padding: 6px 6px;">Pen
+            class="btn btn-default jscolor {valueElement: undefined, onFineChange:'updatePenColor(this)',closable:true,closeText:'Close!',value:'000000'}"
+            style="padding: 6px 6px;">Pen
         </button>
         <button id="jscolor_bg"
-                class="btn btn-default jscolor {valueElement: undefined, onFineChange:'updateBgColor(this)',closable:true,closeText:'Close!'}"
-                style="padding: 6px 6px;"> Bckgnd
+            class="btn btn-default jscolor {valueElement: undefined, onFineChange:'updateBgColor(this)',closable:true,closeText:'Close!'}"
+            style="padding: 6px 6px;"> Bckgnd
         </button>
         <button id="erase" type="button" class="btn btn-default" style="padding: 6px 3px;">Erase</button>
         <button id="undo" type="button" class="btn btn-default" style="padding: 6px 6px;">Undo</button>
@@ -266,4 +299,3 @@
     </div>
 </div>
 {% endblock %}
-
