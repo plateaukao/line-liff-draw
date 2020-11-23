@@ -80,11 +80,11 @@
         });
     }
 
-    function sendImageToUser(url, thumbnail) {
+    function sendImageToUser(id, thumbnail) {
         const type = liff.getContext().type;
         if (type == 'utou' || type == 'group' || type == 'room') {
             liff.sendMessages(
-                createImageMessage(url, thumbnail)
+                createImageMessage(id, thumbnail)
                 //createFlexMessage(thumbnail)
             ).then(function () {
                 liff.closeWindow();
@@ -93,7 +93,7 @@
             });
         } else {
             liff.shareTargetPicker(
-                createImageMessage(url, thumbnail)
+                createImageMessage(id, thumbnail)
                 //createFlexMessage(thumbnail)
             ).then(function (res) {
                 liff.closeWindow();
@@ -104,10 +104,10 @@
         }
     }
 
-    function createImageMessage(url, thumbnail) {
+    function createImageMessage(id, thumbnail) {
         return [{
             type: 'image',
-            originalContentUrl: url,
+            originalContentUrl: 'https://res.cloudinary.com/hfw1idilv/image/upload/q_72/' + id,
             previewImageUrl: thumbnail,
         }];
     }
@@ -176,7 +176,7 @@
             } else {
                 timer = setTimeout(function () {
                     if (!prevent) {
-                        sendImageToUser(image.url, image.thumbnail);
+                        sendImageToUser(image.imageId, image.thumbnail);
                     }
                     prevent = false;
                 }, delay);
@@ -251,7 +251,7 @@
                 'image': canvas.toDataURL('image/png')
             },
             success: function (res, status) {
-                if (liff_init) sendImageToUser(res.url, res.thumbnail);
+                if (liff_init) sendImageToUser(res.imageId, res.thumbnail);
             },
             error: function (res) {
                 window.alert('Error saving image: ' + res.status);

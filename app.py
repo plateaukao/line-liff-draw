@@ -72,7 +72,7 @@ def saveimage():
     thumbnail = image_management.getPreviewImage(imageId)
     db_access.addImage(userId, imageId, url, thumbnail)
 
-    return make_response(jsonify({'url':url,'thumbnail':thumbnail}), 200)
+    return make_response(jsonify({'url':url,'thumbnail':thumbnail, 'imageId':imageId}), 200)
 
 
 @app.route('/api/image', methods=['DELETE'])
