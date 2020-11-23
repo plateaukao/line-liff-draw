@@ -83,25 +83,18 @@
     function sendImageToUser(url, thumbnail) {
         const type = liff.getContext().type;
         if (type == 'utou' || type == 'group' || type == 'room') {
-            liff.sendMessages([
-                {
-                    type: 'image',
-                    originalContentUrl: url,
-                    previewImageUrl: thumbnail,
-                },
-            ]).then(function () {
+            liff.sendMessages(
+                //createImageMessage(),
+                createFlexMessage(thumbnail)
+            ).then(function () {
                 liff.closeWindow();
             }).catch(function (error) {
                 window.alert('Error sending message: ' + error.message);
             });
         } else {
-            liff.shareTargetPicker([
-                {
-                    type: 'image',
-                    originalContentUrl: url,
-                    previewImageUrl: thumbnail,
-                },
-            ]
+            liff.shareTargetPicker(
+                //createImageMessage(url, thumbnail)
+                createFlexMessage(thumbnail)
             ).then(function (res) {
                 liff.closeWindow();
             }).catch(function (res) {
@@ -109,6 +102,39 @@
             });
 
         }
+    }
+
+    function createImageMessage(url, thumbnail) {
+        return {
+            type: 'image',
+            originalContentUrl: url,
+            previewImageUrl: thumbnail,
+        };
+    }
+
+    function createFlexMessage(thumbnail) {
+        var json = [
+            {
+                "type": "flex",
+                "altText": "liffdraw",
+                "contents": {
+                    "type": "bubble",
+                    "size": "kilo",
+                    "hero": {
+                        "type": "image",
+                        "url": thumbnail,
+                        "size": "full",
+                        "aspectMode": "fit",
+                        "action": {
+                            "type": "uri",
+                            "uri": "https://danielliff.herokuapp.com/",
+                        }
+                    }
+                },
+            }
+
+        ];
+        return json;
     }
 
     function removeImage(userId, imageId) {
@@ -336,7 +362,8 @@
         <button id="erase" type="button" class="btn btn-default" style="padding: 6px 3px;">Erase</button>
         <button id="undo" type="button" class="btn btn-default" style="padding: 6px 6px;">Undo</button>
         <button id="send" type="button" class="btn btn-primary" style="padding: 6px 6px;">Save</button>
-        <button id="delete" type="button" class="btn btn-danger" data-toggle="button" aria-pressed="false" style="padding: 6px 6px; display: none;">Delete</button>
+        <button id="delete" type="button" class="btn btn-danger" data-toggle="button" aria-pressed="false"
+            style="padding: 6px 6px; display: none;">Delete</button>
     </div>
 </div>
 {% endblock %}
