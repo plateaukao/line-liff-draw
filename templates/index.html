@@ -84,8 +84,8 @@
         const type = liff.getContext().type;
         if (type == 'utou' || type == 'group' || type == 'room') {
             liff.sendMessages(
-                //createImageMessage(),
-                createFlexMessage(thumbnail)
+                createImageMessage(url, thumbnail)
+                //createFlexMessage(thumbnail)
             ).then(function () {
                 liff.closeWindow();
             }).catch(function (error) {
@@ -93,8 +93,8 @@
             });
         } else {
             liff.shareTargetPicker(
-                //createImageMessage(url, thumbnail)
-                createFlexMessage(thumbnail)
+                createImageMessage(url, thumbnail)
+                //createFlexMessage(thumbnail)
             ).then(function (res) {
                 liff.closeWindow();
             }).catch(function (res) {
@@ -105,11 +105,11 @@
     }
 
     function createImageMessage(url, thumbnail) {
-        return {
+        return [{
             type: 'image',
             originalContentUrl: url,
             previewImageUrl: thumbnail,
-        };
+        }];
     }
 
     function createFlexMessage(thumbnail) {
